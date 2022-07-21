@@ -1,5 +1,5 @@
-// const pass = "$2a$12$H3LRJu3dLom0xII09p3QPOsM4.NnPl3rkE/T0IinfXAy1QCyEc98e";
-// const role = "admin super";
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const authenticateAPI = ({ username, password }) => {
     const user = {
@@ -8,8 +8,8 @@ const authenticateAPI = ({ username, password }) => {
         role: 'admin super'
     }
 
-    const checkPassword = bcrypt.compareSync(password, pass);
-    const checkSuperUser = (role === 'admin super') ? true : false;
+    const checkPassword = bcrypt.compareSync(password, user.password);
+    const checkSuperUser = (user.role === 'admin super') ? true : false;
 
         if (!(user.username === username) || !checkSuperUser) {
           return Promise.reject("Salah Username/Password!")
@@ -22,8 +22,17 @@ const authenticateAPI = ({ username, password }) => {
     return Promise.resolve(user)
 }
 
-const generateToken = () => {
-    
+const generateToken = (user) => {
+    const payload = {
+        sub: user.username,
+        role: user.role,
+        iss: 'Management Item',
+        aud: 'User Management Item',
+      }
+
+      return jwt.sign(payload, process.env.JWT_KEY || 'HALAMADRID', {
+        expiresIn: '24h'
+    });
 }
 
 module.exports = {
@@ -32,12 +41,12 @@ module.exports = {
             const user = await authenticateAPI(req.body);
     
             const { username, role } = user;
-            const token = await generateToken(user);
+            const token = generateToken(user);
     
             res.status(200).json({
                 status: 'logged in',
-                id,
                 username,
+                role,
                 token
             });
         } catch (err) {
@@ -45,8 +54,5 @@ module.exports = {
                 status: 'Wrong Username/Password!'
             });
         }
-        res.status(200).json({
-            status: 'oke'
-        })
     }
 }
