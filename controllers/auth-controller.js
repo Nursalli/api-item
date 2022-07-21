@@ -51,7 +51,7 @@ module.exports = {
             });
         } catch (err) {
             res.status(400).json({
-                status: 'Wrong Username/Password!'
+                status: 'Salah Username/Password!'
             });
         }
     }
