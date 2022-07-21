@@ -5,6 +5,7 @@ const { body } = require('express-validator');
 const itemController = require('../controllers/item-controller');
 const authController = require('../controllers/auth-controller');
 const existMiddleware = require('../middleware/exist');
+const restrict = require('../middleware/restrict-jwt');
 
 router.use( (req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin','*');
@@ -15,9 +16,12 @@ router.use( (req, res, next) => {
 
 router.post('/login', authController.login);
 
-router.get('/', itemController.index);
+router.get('/', 
+    // restrict, 
+    itemController.index);
 
 router.get('/:id',
+    // restrict,
     existMiddleware.exist,
     itemController.find);
 
@@ -54,6 +58,7 @@ router.post('/',
     itemController.create);
 
 router.put('/:id',
+    // restrict,
     existMiddleware.exist,
     [
         body('foto_barang').custom( (data, { req }) => {
@@ -95,6 +100,7 @@ router.put('/:id',
     itemController.update);
 
 router.delete('/:id',
+    // restrict,
     existMiddleware.exist,
     itemController.destroy);
 

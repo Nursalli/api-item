@@ -15,6 +15,10 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload());
 
+//middleware passport jwt
+const passportJWT = require('./lib/passport-jwt');
+app.use(passportJWT.initialize());
+
 //router
 const router = require('./router');
 app.use(router);
