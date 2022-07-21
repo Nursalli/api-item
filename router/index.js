@@ -54,7 +54,7 @@ router.put('/:id',
     existMiddleware.exist,
     [
         body('foto_barang').custom( (data, { req }) => {
-            if(data !== '' || req.files){
+            if(data !== null || req.files){
                 const type = req.files.foto_barang.mimetype.split('/')[1].toLowerCase();
                 const size = req.files.foto_barang.size;
 
