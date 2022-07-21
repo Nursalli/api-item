@@ -24,7 +24,7 @@ router.post('/',
             const type = req.files.foto_barang.mimetype.split('/')[1].toLowerCase();
             const size = req.files.foto_barang.size;
 
-            if(type !== 'jpg' && type !== 'png'){
+            if(type !== 'jpg' && type !== 'jpeg' && type !== 'png'){
                 throw new Error('Type file tidak valid!');
             } else if (size > 100000){
                 throw new Error('Ukuran foto tidak valid, maksimal 100kb!');
