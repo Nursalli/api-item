@@ -3,14 +3,17 @@ const router = express.Router();
 const { body } = require('express-validator');
 
 const itemController = require('../controllers/item-controller');
+const authController = require('../controllers/auth-controller');
 const existMiddleware = require('../middleware/exist');
 
 router.use( (req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,DELETE');
-    // res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
+    res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
     next(); 
 })
+
+router.post('/login', authController.login);
 
 router.get('/', itemController.index);
 
